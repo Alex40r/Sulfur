@@ -1,0 +1,22 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "xstring": "cpp",
+        "stdexcept": "cpp",
+        "initializer_list": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "format": "cpp",
+        "iosfwd": "cpp",
+        "iterator": "cpp",
+        "list": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "system_error": "cpp",
+        "vector": "cpp",
+        "xlocale": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+}
