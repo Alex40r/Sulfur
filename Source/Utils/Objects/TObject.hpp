@@ -38,7 +38,7 @@ inline void Utils::TObject::NotifyCreation(T* ptr) {
 
 	std::size_t hash = std::hash<std::string>{}(classname);
 
-	uint32 r = (hash & 0xFF);
+	uint32 r = (hash & 0xFF) | 0x7F;
 	uint32 g = (hash >> 8) & 0xFF;
 	uint32 b = (hash >> 16) & 0xFF;
 
@@ -55,7 +55,7 @@ inline void Utils::TObject::NotifyDestruction(T* ptr) {
 
 	std::size_t hash = std::hash<std::string>{}(classname);
 
-	uint32 r = (hash & 0xFF);
+	uint32 r = (hash & 0xFF) | 0x7F;
 	uint32 g = (hash >> 8) & 0xFF;
 	uint32 b = (hash >> 16) & 0xFF;
 

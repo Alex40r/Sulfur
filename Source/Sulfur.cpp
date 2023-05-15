@@ -1,5 +1,6 @@
 #include "Utils/Utils.hpp"
 
+#include "Graphics/Descriptors/DescriptorLayout.hpp"
 #include "Graphics/Descriptors/DescriptorPool.hpp"
 #include "Graphics/Devices/Instance.hpp"
 #include "Graphics/Devices/LogicalDevice.hpp"
@@ -69,6 +70,8 @@ int main() {
 		logical_device,
 		{DescriptorPool::Size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1)},
 		1);
+
+	Handle<DescriptorLayout> layout = DescriptorLayout::Create(logical_device, {DescriptorLayout::Binding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, 1, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)});
 
 	while (glfwGetKey(window->GetGLFWWindow(), GLFW_KEY_Q) != GLFW_PRESS) {
 		window->PollEvents();
