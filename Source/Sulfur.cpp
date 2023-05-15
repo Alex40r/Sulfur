@@ -1,5 +1,6 @@
 #include "Utils/Utils.hpp"
 
+#include "Graphics/Descriptors/DescriptorPool.hpp"
 #include "Graphics/Devices/Instance.hpp"
 #include "Graphics/Devices/LogicalDevice.hpp"
 #include "Graphics/Devices/PhysicalDevice.hpp"
@@ -20,8 +21,8 @@ int main() {
 
 	Handle<WindowContext> window_context = WindowContext::Create(graphics_context);
 
-	Handle<Monitor> monitor = window_context->GetMonitors()[1];
-	Handle<Window> window = Window::Create(window_context, 1920, 1080, "Sulfur");
+	Handle<Monitor> monitor = window_context->GetMonitors()[0];
+	Handle<Window> window = Window::Create(window_context, 1920 / 2, 1080 / 2, "Sulfur");
 
 	Handle<Instance> instance = Instance::Create(graphics_context, window->GetRequiredInstanceExtentions(), "Sulfur", "Sulfur");
 
@@ -63,6 +64,11 @@ int main() {
 		{dependency});
 
 	Handle<WindowSurface> surface = WindowSurface::Create(instance, window);
+
+	Handle<DescriptorPool> pool = DescriptorPool::Create(
+		logical_device,
+		{DescriptorPool::Size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1)},
+		1);
 
 	while (glfwGetKey(window->GetGLFWWindow(), GLFW_KEY_Q) != GLFW_PRESS) {
 		window->PollEvents();
