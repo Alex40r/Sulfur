@@ -167,6 +167,7 @@
     <ClCompile Include="Source\Graphics\CommandQueues\CommandQueueFamily.cpp" />
     <ClCompile Include="Source\Graphics\Descriptors\DescriptorLayout.cpp" />
     <ClCompile Include="Source\Graphics\Descriptors\DescriptorPool.cpp" />
+    <ClCompile Include="Source\Graphics\Descriptors\DescriptorSet.cpp" />
     <ClCompile Include="Source\Graphics\Devices\Instance.cpp" />
     <ClCompile Include="Source\Graphics\Devices\LogicalDevice.cpp" />
     <ClCompile Include="Source\Graphics\Devices\PhysicalDevice.cpp" />

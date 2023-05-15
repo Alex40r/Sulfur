@@ -38,6 +38,8 @@ public:
 
 	const DescriptorPool::CreationInfo& GetCreationInfo() { return Info; }
 
+	VkDescriptorPool GetVKDescriptorPool() { return VKDescriptorPool; }
+
 private:
 	DescriptorPool::CreationInfo Info;
 

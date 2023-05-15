@@ -2,6 +2,7 @@
 
 #include "Graphics/Descriptors/DescriptorLayout.hpp"
 #include "Graphics/Descriptors/DescriptorPool.hpp"
+#include "Graphics/Descriptors/DescriptorSet.hpp"
 #include "Graphics/Devices/Instance.hpp"
 #include "Graphics/Devices/LogicalDevice.hpp"
 #include "Graphics/Devices/PhysicalDevice.hpp"
@@ -72,6 +73,8 @@ int main() {
 		1);
 
 	Handle<DescriptorLayout> layout = DescriptorLayout::Create(logical_device, {DescriptorLayout::Binding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, 1, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)});
+
+	Handle<DescriptorSet> set = DescriptorSet::Create(logical_device, layout, pool);
 
 	while (glfwGetKey(window->GetGLFWWindow(), GLFW_KEY_Q) != GLFW_PRESS) {
 		window->PollEvents();

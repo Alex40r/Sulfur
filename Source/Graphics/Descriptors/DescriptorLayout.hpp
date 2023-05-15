@@ -39,6 +39,8 @@ public:
 
 	const DescriptorLayout::CreationInfo& GetCreationInfo() { return Info; }
 
+	VkDescriptorSetLayout GetVKDescriptorLayout() { return VKDescriptorLayout; }
+
 private:
 	DescriptorLayout::CreationInfo Info;
 
