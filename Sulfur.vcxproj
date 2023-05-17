@@ -163,6 +163,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Graphics\CommandBuffers\CommandBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\CommandBuffers\CommandPool.cpp" />
     <ClCompile Include="Source\Graphics\CommandQueues\CommandQueue.cpp" />
     <ClCompile Include="Source\Graphics\CommandQueues\CommandQueueFamily.cpp" />
     <ClCompile Include="Source\Graphics\Devices\Instance.cpp" />
@@ -185,6 +187,10 @@
     <ClInclude Include="Source\Definitions.hpp" />
     <ClInclude Include="Source\External\GLFW.hpp" />
     <ClInclude Include="Source\External\Vulkan.hpp" />
+    <ClInclude Include="Source\Graphics\CommandBuffers\CommandBuffer.hpp" />
+    <ClInclude Include="Source\Graphics\CommandBuffers\CommandPool.hpp" />
+    <ClInclude Include="Source\Graphics\CommandBuffers\ICommandBuffer.hpp" />
+    <ClInclude Include="Source\Graphics\CommandBuffers\ICommandPool.hpp" />
     <ClInclude Include="Source\Graphics\CommandQueues\CommandQueue.hpp" />
     <ClInclude Include="Source\Graphics\CommandQueues\CommandQueueFamily.hpp" />
     <ClInclude Include="Source\Graphics\CommandQueues\ICommandQueue.hpp" />

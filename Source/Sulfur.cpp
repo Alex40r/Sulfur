@@ -15,6 +15,9 @@
 #include "Graphics/RenderPasses/RenderPass.hpp"
 #include "Graphics/RenderPasses/RenderSubpass.hpp"
 
+#include "Graphics/CommandBuffers/CommandBuffer.hpp"
+#include "Graphics/CommandBuffers/CommandPool.hpp"
+
 #include <chrono>
 
 int main() {
@@ -57,6 +60,10 @@ int main() {
 		{color_attachment, depth_attachment},
 		{subpass},
 		{});
+
+	Handle<CommandPool> command_buffer_pool = CommandPool::Create(logical_device, physical_device->GetCommandQueueFamily(0));
+
+	Handle<CommandBuffer> command_buffer = CommandBuffer::Create(command_buffer_pool);
 
 	std::cout << "\n\n";
 

@@ -61,7 +61,7 @@ LogicalDevice::LogicalDevice(const Handle<PhysicalDevice>& physical_device,
 
 	vk_result = vkCreateDevice(physical_device->GetVKPhysicalDevice(), &device_creation_info, nullptr, &VKLogicalDevice);
 	if (vk_result != VK_SUCCESS)
-		throw std::runtime_error("Failed to create LogicalDevice");
+		throw std::runtime_error("Failed to create logical device");
 
 	List<uint32> family_queue_indices(physical_device->GetCommandQueueFamilyCount());
 

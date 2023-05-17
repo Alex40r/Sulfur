@@ -55,6 +55,11 @@ class RenderDependency;
 interface IRenderPass;
 class RenderPass;
 
+interface ICommandPool;
+class CommandPool;
+interface ICommandBuffer;
+class CommandBuffer;
+
 /* ---- ---- ---- ---- */
 
 class TObject;
