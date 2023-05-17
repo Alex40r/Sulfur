@@ -167,6 +167,9 @@
     <ClCompile Include="Source\Graphics\CommandBuffers\CommandPool.cpp" />
     <ClCompile Include="Source\Graphics\CommandQueues\CommandQueue.cpp" />
     <ClCompile Include="Source\Graphics\CommandQueues\CommandQueueFamily.cpp" />
+    <ClCompile Include="Source\Graphics\Descriptors\DescriptorLayout.cpp" />
+    <ClCompile Include="Source\Graphics\Descriptors\DescriptorPool.cpp" />
+    <ClCompile Include="Source\Graphics\Descriptors\DescriptorSet.cpp" />
     <ClCompile Include="Source\Graphics\Devices\Instance.cpp" />
     <ClCompile Include="Source\Graphics\Devices\LogicalDevice.cpp" />
     <ClCompile Include="Source\Graphics\Devices\PhysicalDevice.cpp" />
@@ -195,6 +198,12 @@
     <ClInclude Include="Source\Graphics\CommandQueues\CommandQueueFamily.hpp" />
     <ClInclude Include="Source\Graphics\CommandQueues\ICommandQueue.hpp" />
     <ClInclude Include="Source\Graphics\CommandQueues\ICommandQueueFamily.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\DescriptorLayout.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\DescriptorPool.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\DescriptorSet.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\IDescriptorLayout.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\IDescriptorPool.hpp" />
+    <ClInclude Include="Source\Graphics\Descriptors\IDescriptorSet.hpp" />
     <ClInclude Include="Source\Graphics\Devices\IInstance.hpp" />
     <ClInclude Include="Source\Graphics\Devices\ILogicalDevice.hpp" />
     <ClInclude Include="Source\Graphics\Devices\Instance.hpp" />

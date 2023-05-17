@@ -3,6 +3,8 @@
 #include "THandle.hpp"
 #include "TLink.hpp"
 
+int TOTAL = 0;
+
 TObject::~TObject() {
 	DestroyHandles();
 	DestroyChildren();

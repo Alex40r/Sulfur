@@ -60,6 +60,13 @@ class CommandPool;
 interface ICommandBuffer;
 class CommandBuffer;
 
+interface IDescriptorPool;
+class DescriptorPool;
+interface IDescriptorLayout;
+class DescriptorLayout;
+interface IDescriptorSet;
+class DescriptorSet;
+
 /* ---- ---- ---- ---- */
 
 class TObject;

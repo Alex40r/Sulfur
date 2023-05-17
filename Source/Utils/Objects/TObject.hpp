@@ -30,6 +30,8 @@ private:
 	TLink* Children = nullptr;
 };
 
+extern int TOTAL;
+
 #ifdef _DEBUG
 
 #include <iostream>
@@ -40,6 +42,8 @@ private:
 template <class T>
 inline void TObject::NotifyCreation(T* ptr) {
 #ifdef _DEBUG
+	TOTAL++;
+
 	std::string classname(typeid(typename std::remove_pointer<T>::type).name());
 	classname = classname.substr(std::string("class ").length());
 
@@ -50,18 +54,20 @@ inline void TObject::NotifyCreation(T* ptr) {
 	uint32 b = (hash >> 16) & 0xFF;
 
 	std::cout << "[\033[38;2;0;255;0mCREATION\033[m] \033[38;2;" << std::to_string(r) << ";" << std::to_string(g) << ";" << std::to_string(b) << "m" << classname << "\033[m"
-			  << " - " << std::hex << ptr << std::endl;
+			  << " - " << std::hex << ptr << "\033[38;2;48;48;48m | " << std::to_string(TOTAL) << "\033[m\n";
+
 #endif
 }
 
 template <class T>
 inline void TObject::NotifyDestruction(T* ptr) {
 #ifdef _DEBUG
-	std::string classname(typeid(typename std::remove_pointer<T>::type).name());
-	classname = classname.substr(std::string("class ").length());
+	bool d = std::is_same<T, TObject>::value;
+	if (!d)
+		TOTAL--;
 
-	std::string classname2(typeid(*ptr).name());
-	classname2 = classname2.substr(std::string("class ").length());
+	std::string classname(typeid(*ptr).name());
+	classname = classname.substr(std::string("class ").length());
 
 	std::size_t hash = std::hash<std::string>{}(classname);
 
@@ -69,9 +75,9 @@ inline void TObject::NotifyDestruction(T* ptr) {
 	uint32 g = (hash >> 8) & 0xFF;
 	uint32 b = (hash >> 16) & 0xFF;
 
-	std::cout << (classname == "TObject" ?
-		"[\033[38;2;255;96;0mDESTR START" : "[\033[38;2;255;0;0mDESTRUCTION") << "\033[m] \033[38;2;" << std::to_string(r) << ";" << std::to_string(g) << ";" << std::to_string(b) << "m" << (classname == "TObject" ? "\033[38;2;32;32;32m" : "") << classname2
-			  << "\033[m"
-			  << " - " << std::hex << ptr << std::endl;
+	std::cout << (d ? "[\033[38;2;96;16;0mPARENT" : "[\033[38;2;255;0;0mDESTRUCTION") << "\033[m] \033[38;2;" << std::to_string(r) << ";" << std::to_string(g) << ";" << std::to_string(b) << "m" << (d ? "\033[38;2;32;32;32m" : "") << classname
+			  << (d ? "" : "\033[m")
+			  << " - " << std::hex << ptr << "\033[38;2;48;48;48m | " << std::to_string(TOTAL) << "\033[m\n";
+
 #endif
 }

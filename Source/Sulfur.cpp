@@ -18,6 +18,10 @@
 #include "Graphics/CommandBuffers/CommandBuffer.hpp"
 #include "Graphics/CommandBuffers/CommandPool.hpp"
 
+#include "Graphics/Descriptors/DescriptorLayout.hpp"
+#include "Graphics/Descriptors/DescriptorPool.hpp"
+#include "Graphics/Descriptors/DescriptorSet.hpp"
+
 #include <chrono>
 
 int main() {
@@ -64,6 +68,16 @@ int main() {
 	Handle<CommandPool> command_buffer_pool = CommandPool::Create(logical_device, physical_device->GetCommandQueueFamily(0));
 
 	Handle<CommandBuffer> command_buffer = CommandBuffer::Create(command_buffer_pool);
+
+	Handle<DescriptorPool> descriptor_pool = DescriptorPool::Create(
+		logical_device,
+		{DescriptorPool::Size(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1)}, 2);
+
+	Handle<DescriptorLayout> descriptor_layout = DescriptorLayout::Create(
+		logical_device,
+		{DescriptorLayout::Binding(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 0, 1, VK_SHADER_STAGE_VERTEX_BIT)});
+
+	Handle<DescriptorSet> descriptor_set = DescriptorSet::Create(descriptor_pool, descriptor_layout);
 
 	std::cout << "\n\n";
 
