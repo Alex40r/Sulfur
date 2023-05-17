@@ -29,6 +29,7 @@ DescriptorPool::DescriptorPool(const Handle<LogicalDevice>& logical_device,
 	for (uint32 i = 0; i < sizes.GetLength(); i++)
 		sizes[i].GetVKDescriptorPoolSize(vk_sizes[i]);
 
+
 	VkDescriptorPoolCreateInfo pool_creation_info{};
 	pool_creation_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	pool_creation_info.poolSizeCount = vk_sizes.GetLength();

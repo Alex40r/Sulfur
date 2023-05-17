@@ -26,6 +26,7 @@ DescriptorSet::DescriptorSet(const Handle<DescriptorPool>& descriptor_pool,
 	allocation_info.pSetLayouts = &vk_layout;
 
 	vk_result = vkAllocateDescriptorSets(descriptor_pool->GetLogicalDevice()->GetVKLogicalDevice(), &allocation_info, &VKDescriptorSet);
+
 	if (vk_result != VK_SUCCESS)
 		throw std::runtime_error("Failed to allocate descriptor set");
 }

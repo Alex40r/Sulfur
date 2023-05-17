@@ -11,8 +11,9 @@ public:
 	struct Binding {
 		Binding() = default;
 		Binding(VkDescriptorType type, uint32 binding, uint32 descriptor_count, VkShaderStageFlags stages);
-
+		
 		void GetVKDescriptorLayoutBinding(VkDescriptorSetLayoutBinding& vk_binding) const;
+
 
 		VkDescriptorType Type = VK_DESCRIPTOR_TYPE_SAMPLER;
 		VkShaderStageFlags Stages = 0;

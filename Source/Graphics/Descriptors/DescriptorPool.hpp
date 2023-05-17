@@ -7,6 +7,7 @@
 #include "IDescriptorPool.hpp"
 
 class DescriptorPool : public IDescriptorPool, Parent<LogicalDevice> {
+
 public:
 	struct Size {
 		Size() = default;
@@ -41,5 +42,6 @@ public:
 
 	/* ---- ---- ---- ---- */
 private:
+
 	VkDescriptorPool VKDescriptorPool;
 };
