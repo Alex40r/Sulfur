@@ -1,10 +1,12 @@
 #include "GraphicsContext.hpp"
 
 GraphicsContext::GraphicsContext() {
-	NotifyCreation(this);
+    NotifyCreation(this);
 }
 
 GraphicsContext::~GraphicsContext() {
-	DestroyChildren();
-	NotifyDestruction(this);
+    DestroyChildren();
+    NotifyDestruction(this);
 }
+
+/* ---- ---- ---- ---- */

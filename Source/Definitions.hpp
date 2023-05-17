@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <type_traits>
 
-#define interface class
-
 using uint8 = unsigned char;
 using uint16 = unsigned short;
 using uint32 = unsigned int;
@@ -15,97 +13,88 @@ using int16 = signed short;
 using int32 = signed int;
 using int64 = signed long long;
 
-constexpr uint32 INVALID_ID = -1;
+constexpr uint32 INVALID_ID = 0xFFFFFFFF;
+
+#define interface class
 
 /* ---- ---- ---- ---- */
 
+interface IGraphicsContext;
 class GraphicsContext;
 
-class Buffer;
-class BufferView;
-interface IBuffer;
+interface IWindowContext;
+class WindowContext;
+interface IMonitor;
+class Monitor;
+interface IWindow;
+class Window;
 
-class CommandBuffer;
-class CommandBufferPool;
+interface IInstance;
+class Instance;
+interface IPhysicalDevice;
+class PhysicalDevice;
+interface ILogicalDevice;
+class LogicalDevice;
 
+interface ICommandQueue;
 class CommandQueue;
+interface ICommandQueueFamily;
 class CommandQueueFamily;
 
-class DescriptorLayout;
-class DescriptorPool;
-class DescriptorSet;
-
-class Instance;
-class LogicalDevice;
-class PhysicalDevice;
-
-class Memory;
+interface IMemoryHeap;
 class MemoryHeap;
+interface IMemoryType;
 class MemoryType;
 
-class ComputePipeline;
-class GraphicsPipeline;
-interface IPipeline;
-class PipelineLayout;
-class Shader;
-
-class FrameBuffer;
+interface IRenderAttachment;
 class RenderAttachment;
-class RenderDependency;
-class RenderPass;
+interface IRenderSubpass;
 class RenderSubpass;
-
-class Fence;
-class Semaphore;
-
-interface ITexture;
-class Sampler;
-class Texture;
-class Texture1D;
-class Texture2D;
-class Texture3D;
-class TextureView;
-
-class Monitor;
-class Swapchain;
-class SwapchainTexture;
-class Window;
-class WindowContext;
-class WindowSurface;
+interface IRenderDependency;
+class RenderDependency;
+interface IRenderPass;
+class RenderPass;
 
 /* ---- ---- ---- ---- */
 
-template <typename T>
-struct is_complete_v {
-	template <typename U>
-	static auto test(U*) -> std::integral_constant<bool, sizeof(U) == sizeof(U)>;
-	static auto test(...) -> std::false_type;
-	using type = decltype(test((T*)0));
-};
+class TObject;
+class THandle;
+class TLink;
+class Object;
 
-template <typename T>
-struct is_complete : is_complete_v<T>::type {};
+template <class T>
+class Handle;
+template <class P>
+class Parent;
+template <class P>
+class Link;
 
 /* ---- ---- ---- ---- */
-
-class Uncopyable {
-protected:
-	Uncopyable() = default;
-	~Uncopyable() = default;
-
-private:
-	Uncopyable(const Uncopyable&) = delete;
-	Uncopyable& operator=(const Uncopyable&) = delete;
-};
 
 class Unmovable {
 protected:
 	Unmovable() = default;
 	~Unmovable() = default;
 
-private:
+public:
 	Unmovable(Unmovable&&) = delete;
 	Unmovable& operator=(Unmovable&&) = delete;
+};
+
+class Uncopyable {
+protected:
+	Uncopyable() = default;
+	~Uncopyable() = default;
+
+public:
+	Uncopyable(const Uncopyable&) = delete;
+	Uncopyable& operator=(const Uncopyable&) = delete;
+};
+
+class Static : public Uncopyable, public Unmovable {
+protected:
+	Static() = delete;
+	~Static() = delete;
 };
 
 class Fixed : public Uncopyable, public Unmovable {
@@ -113,45 +102,3 @@ protected:
 	Fixed() = default;
 	~Fixed() = default;
 };
-
-class Static : public Uncopyable, public Unmovable {
-private:
-	Static() = delete;
-};
-
-/* ---- ---- ---- ---- */
-
-class Utils : Static {
-public:
-	template <class...>
-	class Object;
-
-	template <class>
-	class Handle;
-
-private:
-	class THandle;
-	class TLink;
-	class TObject;
-
-	template <class>
-	class Parent;
-
-	template <class>
-	class ParentType;
-
-	template <class>
-	class Link;
-
-public:
-	template <class P, class O>
-	static const typename ParentType<P>::Type GetParent(O* parent);
-	template <class P, class O>
-	static const typename ParentType<P>::Type GetParent(const Handle<O>& parent);
-};
-
-template <class... P>
-using Object = Utils::Object<P...>;
-
-template <class T>
-using Handle = Utils::Handle<T>;

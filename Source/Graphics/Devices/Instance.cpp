@@ -2,45 +2,43 @@
 
 #include "PhysicalDevice.hpp"
 
-Instance::CreationInfo::CreationInfo(const List<std::string>& extentions, std::string application_name, std::string engine_name, uint32 application_version, uint32 engine_version, uint32 api_version)
-	: InstanceExtentions(extentions)
-	, ApplicationName(application_name)
-	, EngineName(engine_name)
-	, ApplicationVersion(application_version)
-	, EngineVersion(engine_version)
-	, VulkanAPIVersion(api_version) {
-}
-
-Instance::Instance(const Handle<GraphicsContext>& graphics_context, const Instance::CreationInfo& creation_info)
-	: Object(graphics_context)
-	, Info(creation_info) {
-	VkResult vk_result;
-
-	if (graphics_context.IsInvalid())
-		throw std::runtime_error("Invalid graphics context");
-
+Instance::Instance(const Handle<GraphicsContext>& graphics_context,
+				   List<std::string> extensions,
+				   std::string application_name,
+				   std::string engine_name,
+				   uint32 application_version,
+				   uint32 engine_version,
+				   uint32 api_version)
+	: Parent<GraphicsContext>(graphics_context) {
 	NotifyCreation(this);
 
-	VkApplicationInfo app_info{};
-	app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	app_info.pApplicationName = Info.ApplicationName.c_str();
-	app_info.applicationVersion = Info.ApplicationVersion;
-	app_info.pEngineName = Info.EngineName.c_str();
-	app_info.engineVersion = Info.EngineVersion;
-	app_info.apiVersion = Info.ApplicationVersion;
+	if (Parent<GraphicsContext>::Get().IsInvalid())
+		throw std::runtime_error("Instance must be created with a valid GraphicsContext");
 
-	VkInstanceCreateInfo instance_creation_info{};
-	instance_creation_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	instance_creation_info.pNext = nullptr;
-	instance_creation_info.pApplicationInfo = &app_info;
+	VkResult vk_result;
 
-	List<const char*> extention_names = Info.InstanceExtentions.GetCharPointerList();
-	instance_creation_info.enabledExtensionCount = extention_names.GetLength();
-	instance_creation_info.ppEnabledExtensionNames = extention_names.GetPointer();
+	VkApplicationInfo application_info{};
+	application_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	application_info.applicationVersion = application_version;
+	application_info.pApplicationName = application_name.c_str();
+	application_info.engineVersion = engine_version;
+	application_info.pEngineName = engine_name.c_str();
+	application_info.apiVersion = api_version;
 
-	vk_result = vkCreateInstance(&instance_creation_info, nullptr, &VKInstance);
+	List<const char*> extension_names;
+	extension_names.Resize(extensions.GetLength());
+	for (uint32 i = 0; i < extensions.GetLength(); i++)
+		extension_names[i] = extensions[i].c_str();
+
+	VkInstanceCreateInfo instance_info{};
+	instance_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	instance_info.pApplicationInfo = &application_info;
+	instance_info.enabledExtensionCount = extension_names.GetLength();
+	instance_info.ppEnabledExtensionNames = extension_names.GetPointer();
+
+	vk_result = vkCreateInstance(&instance_info, nullptr, &VKInstance);
 	if (vk_result != VK_SUCCESS)
-		throw std::runtime_error("Failed to create instance");
+		throw std::runtime_error("Failed to create Vulkan instance");
 
 	uint32 physical_device_count;
 	vk_result = vkEnumeratePhysicalDevices(VKInstance, &physical_device_count, nullptr);
@@ -63,5 +61,7 @@ Instance::~Instance() {
 	DestroyChildren();
 	NotifyDestruction(this);
 
-	vkDestroyInstance(VKInstance, nullptr);
+    vkDestroyInstance(VKInstance, nullptr);
 }
+
+/* ---- ---- ---- ---- */

@@ -32,6 +32,8 @@ public:
 	TList<T>& operator=(const TList<T>& list);
 	TList<T>& operator=(const std::initializer_list<T>& list);
 
+	uint32 IndexOf(const T& value) const;
+
 	void RemoveAtEnd();
 	void Clear();
 
@@ -59,9 +61,7 @@ protected:
 	uint32 Capacity;
 };
 
-/*-----------------------------------------------
--------------------------------------------------
------------------------------------------------*/
+/* ---- ---- ---- ---- */
 
 template <typename T>
 inline TList<T>::TList()
@@ -294,6 +294,16 @@ inline TList<T>& TList<T>::operator=(const std::initializer_list<T>& list) {
 }
 
 template <typename T>
+inline uint32 TList<T>::IndexOf(const T& value) const {
+	for (uint32 i = 0; i < Length; i++)
+		if (Memory[i] == value)
+			return i;
+
+	return INVALID_ID;
+}
+
+
+template <typename T>
 inline void TList<T>::RemoveAtEnd() {
 #ifdef LIST_CHECK_BOUNDS
 	if (Length == 0)
@@ -421,9 +431,7 @@ inline const T* TList<T>::GetPointer() const {
 	return Memory;
 }
 
-/*-----------------------------------------------
--------------------------------------------------
------------------------------------------------*/
+/* ---- ---- ---- ---- */
 /* Generic list */
 
 template <typename T>
@@ -431,27 +439,3 @@ class List : public TList<T> {
 public:
 	using TList<T>::TList;
 };
-
-/*-----------------------------------------------
--------------------------------------------------
------------------------------------------------*/
-/* List<std::string> */
-
-#include <string>
-
-template <>
-class List<std::string> : public TList<std::string> {
-public:
-	using TList<std::string>::TList;
-
-	List<const char*> GetCharPointerList();
-};
-
-inline List<const char*> List<std::string>::GetCharPointerList() {
-	List<const char*> list(this->Length);
-
-	for (uint32 i = 0; i < this->Length; i++)
-		list[i] = this->Memory[i].c_str();
-
-	return list;
-}

@@ -2,16 +2,21 @@
 
 #include "Definitions.hpp"
 
-class Utils::TLink : public Fixed {
-	friend class Utils;
+class TLink : public Fixed {
+	template <class P>
+	friend class Link;
 
 protected:
 	TLink() = default;
 	~TLink() = default;
 
-	Utils::TLink* NextLink = nullptr;
-	Utils::TLink* PreviousLink = nullptr;
+	TLink* NextLink = nullptr;
+	TLink* PreviousLink = nullptr;
 
-	Utils::TObject* ParentObject = nullptr;
-	Utils::TObject* ChildObject = nullptr;
+	TObject* ParentObject = nullptr;
+	TObject* ChildObject = nullptr;
+
+public:
+	bool Matches(TObject* parent) { return ParentObject == parent; }
+	TObject* GetChild() { return ChildObject; }
 };

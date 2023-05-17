@@ -1,9 +1,12 @@
 #pragma once
 
-#include "External/Vulkan.hpp"
 #include "Utils/Utils.hpp"
 
-class PhysicalDevice : public Object<Instance> {
+#include "External/Vulkan.hpp"
+
+#include "IPhysicalDevice.hpp"
+
+class PhysicalDevice : public IPhysicalDevice, Parent<Instance> {
 	friend class Instance;
 
 private:
@@ -12,18 +15,32 @@ private:
 		return new PhysicalDevice(instance, vk_physical_device);
 	}
 
+private:
 	PhysicalDevice(const Handle<Instance>& instance,
 				   VkPhysicalDevice vk_physical_device);
 
 public:
-	~PhysicalDevice();
+	~PhysicalDevice() override;
 
-	const List<Handle<CommandQueueFamily>>& GetCommandQueueFamilies() const { return CommandQueueFamilies; }
-	const List<Handle<MemoryHeap>>& GetMemoryHeaps() const { return MemoryHeaps; }
-	const List<Handle<MemoryType>>& GetMemoryTypes() const { return MemoryTypes; }
+	Handle<PhysicalDevice> GetPhysicalDevice() override { return this; }
 
-	VkPhysicalDevice GetVKPhysicalDevice() const { return VKPhysicalDevice; } 
+	/* ---- ---- ---- ---- */
 
+	VkPhysicalDevice GetVKPhysicalDevice() { return VKPhysicalDevice; }
+
+	const List<Handle<CommandQueueFamily>>& GetCommandQueueFamilies() { return CommandQueueFamilies; }
+	const Handle<CommandQueueFamily>& GetCommandQueueFamily(uint32 index) { return CommandQueueFamilies[index]; }
+	uint32 GetCommandQueueFamilyCount() { return CommandQueueFamilies.GetLength(); }
+
+	const List<Handle<MemoryHeap>>& GetMemoryHeaps() { return MemoryHeaps; }
+	const Handle<MemoryHeap>& GetMemoryHeap(uint32 index) { return MemoryHeaps[index]; }
+	uint32 GetMemoryHeapCount() { return MemoryHeaps.GetLength(); }
+
+	const List<Handle<MemoryType>>& GetMemoryTypes() { return MemoryTypes; }
+	const Handle<MemoryType>& GetMemoryType(uint32 index) { return MemoryTypes[index]; }
+	uint32 GetMemoryTypeCount() { return MemoryTypes.GetLength(); }
+
+	/* ---- ---- ---- ---- */
 private:
 	VkPhysicalDevice VKPhysicalDevice;
 

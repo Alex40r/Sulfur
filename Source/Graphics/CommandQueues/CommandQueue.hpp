@@ -1,49 +1,37 @@
 #pragma once
 
-#include "External/Vulkan.hpp"
 #include "Utils/Utils.hpp"
 
-class CommandQueue : public Object<LogicalDevice, CommandQueueFamily> {
+#include "External/Vulkan.hpp"
+
+#include "ICommandQueue.hpp"
+
+class CommandQueue : public ICommandQueue, Parent<LogicalDevice>, Parent<CommandQueueFamily> {
 	friend class LogicalDevice;
-
-public:
-	struct CreationInfo {
-		CreationInfo() = default;
-		CreationInfo(uint32 family_id,
-					 float priority);
-		CreationInfo(const Handle<CommandQueueFamily>& family,
-					 float priority);
-
-		uint32 FamilyID = INVALID_ID;
-		float Priority = 1.0F;
-
-		void GetVKDeviceQueueCreateInfo(VkDeviceQueueCreateInfo& vk_device_queue_create_info);
-	};
 
 private:
 	static Handle<CommandQueue> Create(const Handle<LogicalDevice>& logical_device,
+									   const Handle<CommandQueueFamily>& command_queue_family,
 									   VkQueue vk_queue,
-									   uint32 queue_id,
-									   const CommandQueue::CreationInfo& creation_info) {
-		return new CommandQueue(logical_device, vk_queue, queue_id, creation_info);
+									   uint32 queue_index) {
+		return new CommandQueue(logical_device, command_queue_family, vk_queue, queue_index);
 	}
 
+private:
 	CommandQueue(const Handle<LogicalDevice>& logical_device,
+				 const Handle<CommandQueueFamily>& command_queue_family,
 				 VkQueue vk_queue,
-				 uint32 queue_id,
-				 const CommandQueue::CreationInfo& creation_info);
-
-	static const Handle<CommandQueueFamily>& GetQueueFamily(const Handle<LogicalDevice>& logical_device,
-													 uint32 family_id);
+				 uint32 queue_index);
 
 public:
-	~CommandQueue();
+	~CommandQueue() override;
 
-	const CommandQueue::CreationInfo& GetCreationInfo() { return Info; }
+	Handle<CommandQueue> GetCommandQueue() override { return this; }
 
+	/* ---- ---- ---- ---- */
+
+	/* ---- ---- ---- ---- */
 private:
-	CommandQueue::CreationInfo Info;
-
 	VkQueue VKQueue;
 
 	uint32 QueueID;

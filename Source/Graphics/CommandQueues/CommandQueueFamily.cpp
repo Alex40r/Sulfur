@@ -1,13 +1,15 @@
 #include "CommandQueueFamily.hpp"
 
-CommandQueueFamily::CommandQueueFamily(const Handle<PhysicalDevice>& physical_device, const VkQueueFamilyProperties& vk_queue_family_properties, uint32 index)
-	: Object(physical_device)
+CommandQueueFamily::CommandQueueFamily(const Handle<PhysicalDevice>& physical_device,
+									   const VkQueueFamilyProperties& vk_queue_family_properties,
+									   uint32 family_index)
+	: Parent<PhysicalDevice>(physical_device)
 	, VKQueueFamilyProperties(vk_queue_family_properties)
-	, Index(index) {
-	if (physical_device.IsInvalid())
-		throw std::runtime_error("Invalid physical device");
-
+	, Index(family_index) {
 	NotifyCreation(this);
+
+	if (Parent<PhysicalDevice>::Get().IsInvalid())
+		throw std::runtime_error("CommandQueueFamily must be created with a valid PhysicalDevice");
 
 	if (vk_queue_family_properties.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 		SupportedFeatures |= QUEUE_FEATURE_FLAG_GRAPHICS;
@@ -32,3 +34,5 @@ CommandQueueFamily::~CommandQueueFamily() {
 	DestroyChildren();
 	NotifyDestruction(this);
 }
+
+/* ---- ---- ---- ---- */

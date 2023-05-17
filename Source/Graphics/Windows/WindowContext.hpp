@@ -1,9 +1,10 @@
 #pragma once
 
-#include "External/GLFW.hpp"
 #include "Utils/Utils.hpp"
 
-class WindowContext : public Object<GraphicsContext> {
+#include "IWindowContext.hpp"
+
+class WindowContext : public IWindowContext, Parent<GraphicsContext> {
 public:
 	static Handle<WindowContext> Create(const Handle<GraphicsContext>& graphics_context) {
 		return new WindowContext(graphics_context);
@@ -13,10 +14,17 @@ private:
 	WindowContext(const Handle<GraphicsContext>& graphics_context);
 
 public:
-	~WindowContext();
+	~WindowContext() override;
+
+	Handle<WindowContext> GetWindowContext() override { return this; }
+
+	/* ---- ---- ---- ---- */
 
 	const List<Handle<Monitor>>& GetMonitors() { return Monitors; }
+	const Handle<Monitor>& GetMonitor(uint32 monitor_id) { return Monitors[monitor_id]; }
+	uint32 GetMonitorCount() { return Monitors.GetLength(); }
 
+	/* ---- ---- ---- ---- */
 private:
 	static int GLFWInitialized;
 

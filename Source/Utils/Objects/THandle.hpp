@@ -2,20 +2,20 @@
 
 #include "Definitions.hpp"
 
-class Utils::THandle : public Unmovable {
-	friend class Utils;
+#include "IHandle.hpp"
+
+class THandle : public IHandle {
+	template <class T>
+	friend class Handle;
 
 protected:
 	THandle() = default;
-	~THandle();
+	~THandle() = default;
 
-	virtual void Destroy() {}
-
+	/* ---- ---- ---- ---- */
 private:
-	Utils::TObject* GetObject() const { return Object; }
+	THandle* NextHandle = nullptr;
+	THandle* PreviousHandle = nullptr;
 
-	Utils::THandle* NextHandle = nullptr;
-	Utils::THandle* PreviousHandle = nullptr;
-
-	Utils::TObject* Object = nullptr;
+	TObject* Object = nullptr;
 };

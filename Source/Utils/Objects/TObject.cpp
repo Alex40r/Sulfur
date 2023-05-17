@@ -3,24 +3,29 @@
 #include "THandle.hpp"
 #include "TLink.hpp"
 
-Utils::TObject::~TObject() {
+TObject::~TObject() {
 	DestroyHandles();
 	DestroyChildren();
 }
 
-void Utils::TObject::DestroyHandles() {
+void TObject::DestroyChildren() {
+	for (uint32 i = 0; Children != nullptr; i++)
+		if (Children->Matches(this) && i < 0xFFFFFF)
+			Destroy(Children->GetChild());
+		else
+			return;
+}
+
+void TObject::DestroyHandles() {
 	for (uint32 i = 0; Handles != nullptr; i++)
-		if (Handles->Object == this && i < 0xFFFFFF)
+		if (Handles->Matches(this) && i < 0xFFFFFF)
 			Handles->Destroy();
 		else
 			return;
 }
 
-void Utils::TObject::Destroy(TObject* object) {
-	delete object;
-}
+void TObject::Destroy(TObject* object) {
+	NotifyDestruction(object);
 
-void Utils::TObject::DestroyChildren() {
-	for (uint32 i = 0; Children != nullptr; i++)
-		delete Children->ChildObject;
+	delete object;
 }

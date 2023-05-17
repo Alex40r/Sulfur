@@ -2,17 +2,24 @@
 
 #include "Utils/Utils.hpp"
 
-class GraphicsContext : public Object<> {
+#include "IGraphicsContext.hpp"
+
+class GraphicsContext : public IGraphicsContext  {
 public:
-	static Handle<GraphicsContext> Create() {
-		return new GraphicsContext();
-	}
+    static Handle<GraphicsContext> Create() {
+        return new GraphicsContext();
+    }
 
 private:
-	GraphicsContext();
+    GraphicsContext();
 
 public:
-	~GraphicsContext();
+    ~GraphicsContext() override;
 
+    Handle<GraphicsContext> GetGraphicsContext() override { return this; }
+
+    /* ---- ---- ---- ---- */
+
+    /* ---- ---- ---- ---- */
 private:
 };

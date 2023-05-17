@@ -5,12 +5,12 @@
 #include "Graphics/Memory/MemoryType.hpp"
 
 PhysicalDevice::PhysicalDevice(const Handle<Instance>& instance, VkPhysicalDevice vk_physical_device)
-	: Object(instance)
+	: Parent<Instance>(instance)
 	, VKPhysicalDevice(vk_physical_device) {
-    if (instance.IsInvalid())
-        throw std::runtime_error("Invalid instance");
-
 	NotifyCreation(this);
+
+	if (Parent<Instance>::Get().IsInvalid())
+		throw std::runtime_error("PhysicalDevice must be created with a valid Instance");
 
 	vkGetPhysicalDeviceProperties(vk_physical_device, &VKProperties);
 	vkGetPhysicalDeviceFeatures(vk_physical_device, &VKFeatures);
@@ -40,3 +40,5 @@ PhysicalDevice::~PhysicalDevice() {
 	DestroyChildren();
 	NotifyDestruction(this);
 }
+
+/* ---- ---- ---- ---- */

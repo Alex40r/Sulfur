@@ -1,9 +1,12 @@
 #pragma once
 
-#include "External/Vulkan.hpp"
 #include "Utils/Utils.hpp"
 
-class RenderPass : public Object<LogicalDevice, List<RenderAttachment>, List<RenderSubpass>, List<RenderDependency>> {
+#include "External/Vulkan.hpp"
+
+#include "IRenderPass.hpp"
+
+class RenderPass : public IRenderPass, Parent<LogicalDevice>, Parent<List<RenderAttachment>>, Parent<List<RenderSubpass>>, Parent<List<RenderDependency>> {
 public:
 	static Handle<RenderPass> Create(const Handle<LogicalDevice>& logical_device,
 									 const List<Handle<RenderAttachment>>& attachments,
@@ -19,12 +22,16 @@ private:
 			   const List<Handle<RenderDependency>>& dependencies);
 
 public:
-	~RenderPass();
+	~RenderPass() override;
+
+	Handle<RenderPass> GetRenderPass() override { return this; }
+
+	/* ---- ---- ---- ---- */
 
 	uint32 GetAttachmentID(const Handle<RenderAttachment>& attachment);
 	uint32 GetSubpassID(const Handle<RenderSubpass>& subpass);
-	uint32 GetDependencyID(const Handle<RenderDependency>& dependency);
 
+	/* ---- ---- ---- ---- */
 private:
 	VkRenderPass VKRenderPass;
 };

@@ -1,47 +1,52 @@
 #pragma once
 
-#include "External/Vulkan.hpp"
 #include "Utils/Utils.hpp"
 
-#include "Graphics/CommandQueues/CommandQueue.hpp"
+#include "External/Vulkan.hpp"
 
-class LogicalDevice : public Object<PhysicalDevice> {
+#include "ILogicalDevice.hpp"
+
+struct CommandQueueDescriptor {
+	CommandQueueDescriptor() = default;
+	CommandQueueDescriptor(uint32 family_id,
+						   float priority);
+	CommandQueueDescriptor(const Handle<CommandQueueFamily>& family,
+						   float priority);
+
+	void GetVKDeviceQueueCreateInfo(VkDeviceQueueCreateInfo& vk_queue_creation_info) const;
+
+	uint32 FamilyID = INVALID_ID;
+	float Priority = 1.0F;
+};
+
+class LogicalDevice : public ILogicalDevice, Parent<PhysicalDevice> {
 public:
-	struct CreationInfo {
-		CreationInfo() = default;
-		CreationInfo(const List<CommandQueue::CreationInfo>& command_queue_creation_infos,
-					 const List<std::string>& logical_device_extentions);
-
-		List<CommandQueue::CreationInfo> CommandQueueCreationInfos;
-		List<std::string> LogicalDeviceExtentions;
-	};
-
 	static Handle<LogicalDevice> Create(const Handle<PhysicalDevice>& physical_device,
-										const List<CommandQueue::CreationInfo>& command_queue_creation_infos,
-										const List<std::string>& logical_device_extentions) {
-		return new LogicalDevice(physical_device, LogicalDevice::CreationInfo(command_queue_creation_infos, logical_device_extentions));
-	}
-	static Handle<LogicalDevice> Create(const Handle<PhysicalDevice>& physical_device,
-										const LogicalDevice::CreationInfo& creation_info) {
-		return new LogicalDevice(physical_device, creation_info);
+										const List<std::string>& extensions,
+										const List<CommandQueueDescriptor> command_queue_descriptors) {
+		return new LogicalDevice(physical_device, extensions, command_queue_descriptors);
 	}
 
 private:
 	LogicalDevice(const Handle<PhysicalDevice>& physical_device,
-				  const LogicalDevice::CreationInfo& creation_info);
+				  const List<std::string>& extensions,
+				  const List<CommandQueueDescriptor> command_queue_descriptors);
 
 public:
-	~LogicalDevice();
+	~LogicalDevice() override;
 
-	const LogicalDevice::CreationInfo& GetCreationInfo() { return Info; }
+	Handle<LogicalDevice> GetLogicalDevice() override { return this; }
 
-	const List<Handle<CommandQueue>>& GetCommandQueues() const { return CommandQueues; }
+	/* ---- ---- ---- ---- */
+
+	const List<Handle<CommandQueue>>& GetCommandQueues() { return CommandQueues; }
+	const Handle<CommandQueue>& GetCommandQueue(uint32 index) { return CommandQueues[index]; }
+	uint32 GetCommandQueueCount() { return CommandQueues.GetLength(); }
 
 	VkDevice GetVKLogicalDevice() { return VKLogicalDevice; }
 
+	/* ---- ---- ---- ---- */
 private:
-	LogicalDevice::CreationInfo Info;
-
 	VkDevice VKLogicalDevice;
 
 	List<Handle<CommandQueue>> CommandQueues;

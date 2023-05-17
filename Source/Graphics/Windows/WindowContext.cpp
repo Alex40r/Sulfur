@@ -1,22 +1,25 @@
 #include "WindowContext.hpp"
 
+#include "External/GLFW.hpp"
+
 #include "Monitor.hpp"
 
 int WindowContext::GLFWInitialized = 0;
 
 WindowContext::WindowContext(const Handle<GraphicsContext>& graphics_context)
-	: Object(graphics_context) {
-	if (graphics_context.IsInvalid())
-		throw std::runtime_error("Invalid graphics context");
-
+	: Parent<GraphicsContext>(graphics_context) {
 	NotifyCreation(this);
 
+	if (Parent<GraphicsContext>::Get().IsInvalid())
+		throw std::runtime_error("WindowContext must be created with a valid GraphicsContext");
+
 	if (GLFWInitialized == 0)
-		glfwInit();
+		if (glfwInit() == GLFW_FALSE)
+			throw std::runtime_error("Failed to initialize GLFW");
 
 	GLFWInitialized++;
 
-	int monitor_count = 0;
+	int monitor_count;
 	GLFWmonitor** monitors = glfwGetMonitors(&monitor_count);
 
 	Monitors.Resize(monitor_count);
@@ -34,3 +37,5 @@ WindowContext::~WindowContext() {
 	if (GLFWInitialized == 0)
 		glfwTerminate();
 }
+
+/* ---- ---- ---- ---- */

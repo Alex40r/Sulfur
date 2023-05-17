@@ -1,7 +1,10 @@
 #pragma once
 
-#include "External/Vulkan.hpp"
 #include "Utils/Utils.hpp"
+
+#include "External/Vulkan.hpp"
+
+#include "ICommandQueueFamily.hpp"
 
 typedef uint32 QueueFeatureFlags;
 enum QueueFeatureFlagsBit : QueueFeatureFlags {
@@ -16,26 +19,31 @@ enum QueueFeatureFlagsBit : QueueFeatureFlags {
 	QUEUE_FEATURE_FLAG_PRESENT = 1U << 6,
 };
 
-class CommandQueueFamily : public Object<PhysicalDevice> {
+class CommandQueueFamily : public ICommandQueueFamily, Parent<PhysicalDevice> {
 	friend class PhysicalDevice;
 
 private:
 	static Handle<CommandQueueFamily> Create(const Handle<PhysicalDevice>& physical_device,
 											 const VkQueueFamilyProperties& vk_queue_family_properties,
-											 uint32 index) {
-		return new CommandQueueFamily(physical_device, vk_queue_family_properties, index);
+											 uint32 family_index) {
+		return new CommandQueueFamily(physical_device, vk_queue_family_properties, family_index);
 	}
 
+private:
 	CommandQueueFamily(const Handle<PhysicalDevice>& physical_device,
 					   const VkQueueFamilyProperties& vk_queue_family_properties,
-					   uint32 index);
+					   uint32 family_index);
 
 public:
-	~CommandQueueFamily();
+	~CommandQueueFamily() override;
 
-	uint32 GetFamilyIndex() const { return Index; }
-	uint32 GetMaxQueueCount() const { return VKQueueFamilyProperties.queueCount; }
+	Handle<CommandQueueFamily> GetCommandQueueFamily() override { return this; }
 
+	/* ---- ---- ---- ---- */
+
+    uint32 GetFamilyID() { return Index; }
+
+	/* ---- ---- ---- ---- */
 private:
 	VkQueueFamilyProperties VKQueueFamilyProperties;
 	uint32 Index;

@@ -3,58 +3,52 @@
 #include "Definitions.hpp"
 
 #include "TLink.hpp"
-#include "TObject.hpp"
 
 template <class P>
-class Utils::Link : public Utils::TLink {
+class Link : public TLink {
 public:
 	Link() = default;
 	Link(const Link<P>& link);
 	~Link();
 
-	void InitLink(const Handle<P>& parent, Utils::TObject* child);
-	void DestroyLink();
-
-	bool IsValid() { return Parent.IsValid(); };
-	bool IsInvalid() { return Parent.IsInvalid(); };
-
-	Handle<P> Parent;
+	void Init(TObject* parent, TObject* child);
+	void Destroy();
 };
 
 /* ---- ---- ---- ---- */
 
 template <class P>
-inline Utils::Link<P>::Link(const Link<P>& link) {
-	InitLink(link.Parent, link.ChildObject);
+inline Link<P>::Link(const Link<P>& link) {
+	Init(link.ParentObject, link.ChildObject);
 }
 
 template <class P>
-inline Utils::Link<P>::~Link() {
-	DestroyLink();
+inline Link<P>::~Link() {
+	Destroy();
 }
 
 template <class P>
-inline void Utils::Link<P>::InitLink(const Handle<P>& parent, Utils::TObject* child) {
-	DestroyLink();
+inline void Link<P>::Init(TObject* parent, TObject* child) {
+	Destroy();
 
-	if (parent.IsInvalid())
+	if (parent == nullptr || child == nullptr)
 		return;
 
-	Parent = parent;
-	ParentObject = parent.GetObject();
+	ParentObject = parent;
 	ChildObject = child;
 
+	NextLink = nullptr;
 	PreviousLink = ParentObject->Children;
+
 	if (PreviousLink != nullptr)
 		PreviousLink->NextLink = this;
 
-	NextLink = nullptr;
 	ParentObject->Children = this;
 }
 
 template <class P>
-inline void Utils::Link<P>::DestroyLink() {
-	if (ParentObject == nullptr)
+inline void Link<P>::Destroy() {
+	if (ParentObject == nullptr || ChildObject == nullptr)
 		return;
 
 	if (PreviousLink != nullptr)
@@ -67,5 +61,4 @@ inline void Utils::Link<P>::DestroyLink() {
 
 	ParentObject = nullptr;
 	ChildObject = nullptr;
-	Parent = nullptr;
 }
