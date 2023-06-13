@@ -26,7 +26,7 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # Add the Vulkan SDK
-find_package(Vulkan REQUIRED)
+find_package(Vulkan REQUIRED COMPONENTS dxc)
 target_link_libraries(Sulfur Vulkan::Vulkan)
 
 # Add the GLFW library
@@ -37,8 +37,20 @@ target_link_libraries(Sulfur glfw)
 add_subdirectory(External/glm)
 target_link_libraries(Sulfur glm)
 
-add_custom_command(
-        TARGET ${PROJECT_NAME}  POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_CURRENT_SOURCE_DIR}/Shaders
-                $<TARGET_FILE_DIR:${PROJECT_NAME}>/Shaders)
+# Add all the shaders to the project
+file(GLOB_RECURSE SHADERS "Shaders/*.hlsl")
+
+foreach(SHADER ${SHADERS})
+  get_filename_component(FILE_NAME ${SHADER} NAME)
+  string(REGEX REPLACE "\\.[^.]*$" "" FILE_NAME_WITHOUT_EXTENTION ${FILE_NAME})
+  set(SPIRV "${CMAKE_CURRENT_BINARY_DIR}/Shaders/${FILE_NAME_WITHOUT_EXTENTION}.spv")
+  add_custom_command(
+	OUTPUT ${SPIRV}
+	COMMAND ${Vulkan_dxc_EXECUTABLE} -Zi -spirv -T lib_6_7 -Fo ${SPIRV} ${SHADER}
+	DEPENDS ${SHADER})
+  list(APPEND SPIRV_BINARY_FILES ${SPIRV})
+endforeach(SHADER)
+
+add_custom_target(shaders ALL DEPENDS ${SPIRV_BINARY_FILES})
+
+add_dependencies(Sulfur shaders)
